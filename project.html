@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>كورسات البرمجة التفاعلية</title>
+    <style>
+        /* CSS للتصميم */
+        :root {
+            --primary-color: #007BFF;
+            --secondary-color: #6c757d;
+            --background-color: #f8f9fa;
+            --card-background: #ffffff;
+            --text-color: #343a40;
+            --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            text-align: right;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .course-card {
+            background-color: var(--card-background);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .course-card h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+            font-size: 1.8em;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .course-card p {
+            flex-grow: 1; /* للسماح للوصف بأخذ المساحة المتاحة */
+        }
+
+        .details-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 15px;
+            transition: background-color 0.3s ease;
+            align-self: flex-start; /* ليكون الزر في بداية السطر */
+        }
+
+        .details-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* تنسيق النافذة المنبثقة (Modal) */
+        .modal {
+            display: none; /* إخفاء بشكل افتراضي */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5); /* خلفية معتمة */
+            direction: rtl;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% من الأعلى وفي المنتصف */
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            text-align: right;
+        }
+
+        .close-button {
+            color: #aaa;
+            float: left; /* لعرض زر الإغلاق في الزاوية العلوية اليسرى (في العرض من اليمين لليسار) */
+            font-size: 28px;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .modal-content h3 {
+            color: var(--primary-color);
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>كورسات البرمجة</h1>
+    </header>
+
+    <main class="container">
+        
+        <section class="course-card" id="python-course">
+            <h2>Python 🐍</h2>
+            <p>
+                تعلم لغة بايثون القوية والمتعددة الاستخدامات. مثالية لعلوم البيانات، وتطوير الويب، والأتمتة.
+            </p>
+            <button class="details-button" data-course="python">عرض التفاصيل</button>
+        </section>
+
+        <section class="course-card" id="javascript-course">
+            <h2>JavaScript 📜</h2>
+            <p>
+                اللغة الأساسية لتطوير الويب التفاعلي. تعلم بناء واجهات مستخدم ديناميكية وتطبيقات الـ Full-Stack.
+            </p>
+            <button class="details-button" data-course="javascript">عرض التفاصيل</button>
+        </section>
+
+        <section class="course-card" id="cpp-course">
+            <h2>C++ ⚙️</h2>
+            <p>
+                لغة قوية وممتازة لبناء أنظمة التشغيل، وتطوير الألعاب، والبرامج عالية الأداء.
+            </p>
+            <button class="details-button" data-course="cpp">عرض التفاصيل</button>
+        </section>
+
+    </main>
+
+    <div id="courseModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3 id="modalTitle"></h3>
+            <p id="modalDetails"></p>
+            <p><strong>مدة الكورس:</strong> <span id="modalDuration"></span></p>
+            <p><strong>المتطلبات المسبقة:</strong> <span id="modalPrerequisites"></span></p>
+        </div>
+    </div>
+
+    <script>
+        // بيانات تفاصيل الكورسات
+        const courseData = {
+            python: {
+                title: "كورس Python الشامل",
+                details: "يركز هذا الكورس على أساسيات بايثون، هياكل البيانات، البرمجة الشيئية (OOP)، وتطبيقات عملية في مشاريع حقيقية.",
+                duration: "8 أسابيع",
+                prerequisites: "لا توجد خبرة مسبقة مطلوبة"
+            },
+            javascript: {
+                title: "كورس JavaScript للمبتدئين والمتقدمين",
+                details: "تعلم DOM Manipulation، AJAX، التعامل مع API's، والمفاهيم المتقدمة مثل الـ Closures والـ Promises.",
+                duration: "10 أسابيع",
+                prerequisites: "معرفة أساسية بـ HTML و CSS"
+            },
+            cpp: {
+                title: "كورس C++ وتطوير الألعاب",
+                details: "تغطية شاملة للغة C++، إدارة الذاكرة، المؤشرات، وتطبيق المفاهيم في بناء محركات ألعاب بسيطة أو أنظمة تشغيل مصغرة.",
+                duration: "12 أسبوع",
+                prerequisites: "مفاهيم برمجية أساسية"
+            }
+        };
+
+        // الحصول على عناصر DOM
+        const modal = document.getElementById('courseModal');
+        const closeButton = document.querySelector('.close-button');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDetails = document.getElementById('modalDetails');
+        const modalDuration = document.getElementById('modalDuration');
+        const modalPrerequisites = document.getElementById('modalPrerequisites');
+        const detailButtons = document.querySelectorAll('.details-button');
+
+        // دالة لعرض النافذة المنبثقة
+        function showDetails(courseKey) {
+            const data = courseData[courseKey];
+
+            if (data) {
+                // تحديث محتوى النافذة المنبثقة
+                modalTitle.textContent = data.title;
+                modalDetails.textContent = data.details;
+                modalDuration.textContent = data.duration;
+                modalPrerequisites.textContent = data.prerequisites;
+
+                // عرض النافذة
+                modal.style.display = 'block';
+            }
+        }
+
+        // إضافة مستمعي الأحداث لجميع الأزرار
+        detailButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const courseKey = this.getAttribute('data-course');
+                showDetails(courseKey);
+            });
+        });
+
+        // إغلاق النافذة عند الضغط على زر الإغلاق (X)
+        closeButton.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+
+        // إغلاق النافذة عند الضغط خارجها
+        window.addEventListener('click', function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+    </script>
+
+</body>
+</html>
